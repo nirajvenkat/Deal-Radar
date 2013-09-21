@@ -16,7 +16,7 @@ public class DealRadar extends Activity
 		setContentView(R.layout.activity_main);
 
         ActionBar actionBar = getActionBar();
-        actionBar.setCustomView(R.layout.action_bar);
+        actionBar.setCustomView(R.layout.action_bar);;
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
 
