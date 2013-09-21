@@ -28,6 +28,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mhacks.dealradar.objects.Advertisement;
+import com.mhacks.dealradar.support.CustomAdapter;
 import com.mhacks.dealradar.support.DealAdapter;
 import com.mhacks.dealradar.support.WifiReceiver;
 import com.parse.FindCallback;
@@ -89,7 +90,7 @@ public class DealRadar extends Activity
 
         dealList = (ListView) findViewById(R.id.deal_list_view);
         drawerList = (ListView) findViewById(R.id.left_drawer);
-        drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listOfCategories));
+        drawerList.setAdapter(new CustomAdapter(this, listOfCategories));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 //
