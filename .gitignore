@@ -1,0 +1,7 @@
+*.class
+Thumbs.db
+.Trashes
+.Spotlight-V100
+._*
+.DS_Store
+.DS_Store?
