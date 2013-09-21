@@ -27,5 +27,5 @@ public class Constants
     public static final int POOR_SIGNAL_LOWER_BOUND = -95;
 
     //Wifi Scanning Constants
-    public static final int ASYNC_SCAN_TICK = 3; //In seconds!
+    public static final int ASYNC_SCAN_TICK = 6; //In seconds!
 }

@@ -12,12 +12,18 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,6 +39,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -42,11 +49,17 @@ public class DealRadar extends Activity
     public static ArrayList<Advertisement> advertisements;
     public static Typeface myriadProRegular, myriadProSemiBold;
     public static ListView dealList;
+    public static ListView drawerList;
+    public static ArrayList<String> listOfCategories =
+            new ArrayList<String>(Arrays.asList("All", "Clothing", "Games", "Movies", "Pets", "Tech", "Toys"));
 
     WifiManager mainWifi;
     WifiReceiver receiverWifi;
     ProgressDialog progressDialog;
+    DrawerLayout drawerLayout;
     EditText searchBar;
+    ImageButton drawerButton;
+    ActionBarDrawerToggle drawerToggle;
     InputMethodManager imm;
     wifiscan scanThread;
 
@@ -56,7 +69,6 @@ public class DealRadar extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        dealList = (ListView) findViewById(R.id.deal_list_view);
         Parse.initialize(this,  Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
         ParseAnalytics.trackAppOpened(getIntent());
         progressDialog = new ProgressDialog(this);
@@ -64,13 +76,36 @@ public class DealRadar extends Activity
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
         ActionBar actionBar = getActionBar();
-        actionBar.setCustomView(R.layout.action_bar);;
+        actionBar.setCustomView(R.layout.action_bar);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
         myriadProRegular = Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Regular.otf");
         myriadProSemiBold = Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf");
         TextView txtTitle = (TextView) findViewById(R.id.action_bar_title);
         txtTitle.setTypeface(myriadProSemiBold);
+
+        dealList = (ListView) findViewById(R.id.deal_list_view);
+        drawerList = (ListView) findViewById(R.id.left_drawer);
+        drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, listOfCategories));
+        drawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+//
+//        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        drawerButton = (ImageButton) findViewById(R.id.toggle_button);
+//        drawerToggle = new ActionBarDrawerToggle(
+//                this,                  // host Activity */
+//                drawerLayout,         // DrawerLayout object */
+//                R.drawable.ic_launcher,  // nav drawer icon to replace 'Up' caret */
+//                R.string.hello_world,  // "open drawer" description */
+//                R.string.hello_world  // "close drawer" description */
+//        );
+//
+//        // Set the drawer toggle as the DrawerListener
+//        drawerLayout.setDrawerListener(drawerToggle);
+//
+//        actionBar.setDisplayHomeAsUpEnabled(true);
+//        //drawerButton.setOnClickListener(drawerListener);
+
 
         searchBar = (EditText) findViewById(R.id.search_bar);
         searchBar.setTypeface(myriadProRegular);
@@ -204,4 +239,18 @@ public class DealRadar extends Activity
             }
         }
     }
+
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            //selectItem(position);
+        }
+    }
+
 }
+
+
+
+
+
+
