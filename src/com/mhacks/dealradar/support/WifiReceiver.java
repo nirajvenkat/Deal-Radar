@@ -9,6 +9,8 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.mhacks.dealradar.Constants;
@@ -42,12 +44,14 @@ public class WifiReceiver extends BroadcastReceiver
     public static DealAdapter adapter;
     public static ArrayList<Advertisement> matches;
     public static ArrayList<Notification> notifications;
+    private AdapterHandler handler;
     private static boolean isSearching = false;
 
     public WifiReceiver(WifiManager mainWifi)
     {
         this.mainWifi = mainWifi;
         notifications = new ArrayList<Notification>();
+        handler = new AdapterHandler();
     }
 
     public List<ScanResult> getWifiList()
@@ -166,51 +170,79 @@ public class WifiReceiver extends BroadcastReceiver
     {
         if(!isSearching)
         {
-        context = c;
-        Log.d("fatal", "Scan at " + System.currentTimeMillis());
-        wifiList = mainWifi.getScanResults();
-        matches = new ArrayList<Advertisement>();
-        int i = 0;
+            context = c;
+            wifiList = mainWifi.getScanResults();
+            matches = new ArrayList<Advertisement>();
+            setInterrupts(true);
+            new parseReceive().execute(handler);
+        }
 
-        for(ScanResult accessPoint : wifiList)
+    }
+
+    private class parseReceive extends AsyncTask<Object, Integer, Void>
+    {
+        Handler handler;
+
+        protected Void doInBackground(Object... arg0)
         {
-            for(Advertisement ad : DealRadar.advertisements)
+            Log.d("fatal", "Scan at " + System.currentTimeMillis());
+            int i = 0;
+            handler = (Handler) arg0[0];
+
+            for(ScanResult accessPoint : wifiList)
             {
-                if(accessPoint.BSSID.equalsIgnoreCase(ad.BSSID))
+                for(Advertisement ad : DealRadar.advertisements)
                 {
-                    //Log.d("fatal", ad.title);
-                    ad.signalStrength = getSignalStrength(accessPoint);
-                    matches.add(ad);
-
-                    if(!notificationExists(ad))
+                    if(accessPoint.BSSID.equalsIgnoreCase(ad.BSSID))
                     {
-                        Notification tmp = new Notification(context, i++, ad.company, ad.title, ad.objectId);
-                        tmp.pushNotification();
-                        notifications.add(tmp);
+                        //Log.d("fatal", ad.title);
+                        ad.signalStrength = getSignalStrength(accessPoint);
+                        matches.add(ad);
 
+                        if(!notificationExists(ad))
+                        {
+                            Notification tmp = new Notification(context, i++, ad.company, ad.title, ad.objectId);
+                            tmp.pushNotification();
+                            notifications.add(tmp);
+
+                        }
                     }
                 }
             }
+
+
+            return null;
         }
 
-        if(adapter != null)
+        protected void onPostExecute(Void v)
         {
-            if(!noChangesToArray(matches))
+            handler.sendEmptyMessage(0);
+        }
+    }
+
+    public class AdapterHandler extends Handler
+    {
+        public void handleMessage(Message msg)
+        {
+            if(adapter != null)
             {
-                adapter.setContent(matches);
-                DealRadar.dealList.invalidateViews();
+                if(!noChangesToArray(matches))
+                {
+                    adapter.setContent(matches);
+                    DealRadar.dealList.invalidateViews();
 
-                //Remove notifications here
+                    //Remove notifications here
+                }
             }
-        }
-        else
-        {
-            adapter = new DealAdapter(context, matches);
-            DealRadar.dealList.setAdapter(adapter);
-            DealRadar.dealList.invalidateViews();
-        }
-        }
+            else
+            {
+                adapter = new DealAdapter(context, matches);
+                DealRadar.dealList.setAdapter(adapter);
+                DealRadar.dealList.invalidateViews();
+            }
 
+            setInterrupts(false);
+        }
     }
 
 

@@ -62,6 +62,7 @@ public class DealRadar extends Activity
     ActionBarDrawerToggle drawerToggle;
     InputMethodManager imm;
     wifiscan scanThread;
+    boolean firstLoad = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -148,8 +149,6 @@ public class DealRadar extends Activity
             {
             }
         });
-
-
     }
 
     public void onResume()
@@ -158,7 +157,17 @@ public class DealRadar extends Activity
         mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         receiverWifi = new WifiReceiver(mainWifi);
         registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-        findMatches();
+
+        if(firstLoad)
+        {
+            firstLoad = false;
+            findMatches();
+        }
+        else
+        {
+            scanThread = new wifiscan();
+            scanThread.start();
+        }
     }
 
     private Date fixDate(Date date)
