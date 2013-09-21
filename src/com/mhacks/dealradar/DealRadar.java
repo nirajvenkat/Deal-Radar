@@ -48,6 +48,7 @@ public class DealRadar extends Activity
     ProgressDialog progressDialog;
     EditText searchBar;
     InputMethodManager imm;
+    wifiscan scanThread;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -121,6 +122,7 @@ public class DealRadar extends Activity
         super.onResume();
         mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         receiverWifi = new WifiReceiver(mainWifi);
+        registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         findMatches();
     }
 
@@ -171,7 +173,8 @@ public class DealRadar extends Activity
                         advertisements.add(tmp);
                     }
                     progressDialog.dismiss();
-                    new wifiscan().execute();
+                    scanThread = new wifiscan();
+                    scanThread.start();
                 } else {
                     e.printStackTrace();
                 }
@@ -179,27 +182,26 @@ public class DealRadar extends Activity
         });
     }
 
-    private class wifiscan extends AsyncTask<Void, String, Void> {
+    private class wifiscan extends Thread
+    {
+        boolean running = true;
 
-        protected void onPostExecute(Void result)
+        public void setRunning(boolean running)
         {
-            new wifiscan().execute();
+            this.running = running;
         }
 
-        @Override
-        protected Void doInBackground(Void... params)
+        public void run()
         {
-            registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-            mainWifi.startScan();
-            try
+            while(running)
             {
-                Thread.sleep(Constants.ASYNC_SCAN_TICK * 1000);
+                mainWifi.startScan();
+                try
+                {
+                    Thread.sleep(Constants.ASYNC_SCAN_TICK * 1000);
+                }
+                catch(Exception e){}
             }
-            catch(Exception e){}
-            return null;
         }
     }
-
-
-
 }
