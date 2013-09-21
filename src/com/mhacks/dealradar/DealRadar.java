@@ -44,7 +44,7 @@ public class DealRadar extends Activity
         Parse.initialize(this,  Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
         ParseAnalytics.trackAppOpened(getIntent());
         ActionBar actionBar = getActionBar();
-        actionBar.setCustomView(R.layout.action_bar);
+        actionBar.setCustomView(R.layout.action_bar);;
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
     }
