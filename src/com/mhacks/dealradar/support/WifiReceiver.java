@@ -12,6 +12,9 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.mhacks.dealradar.Constants;
 import com.mhacks.dealradar.DealRadar;
@@ -226,17 +229,16 @@ public class WifiReceiver extends BroadcastReceiver
                 {
                     if(accessPoint.BSSID.equalsIgnoreCase(ad.BSSID))
                     {
-                        //Log.d("fatal", ad.title);
-                        ad.signalStrength = getSignalStrength(accessPoint);
-                        matches.add(ad);
+                                ad.signalStrength = getSignalStrength(accessPoint);
+                                matches.add(ad);
 
-                        if(!notificationExists(ad) && mayNotify)
-                        {
-                            Notification tmp = new Notification(context, i++, ad.company, ad.title, ad.objectId);
-                            tmp.pushNotification();
-                            notifications.add(tmp);
+                                if(!notificationExists(ad) && mayNotify)
+                                {
+                                    Notification tmp = new Notification(context, i++, ad.company, ad.title, ad.objectId);
+                                    tmp.pushNotification();
+                                    notifications.add(tmp);
 
-                        }
+                                }
                     }
                 }
             }
@@ -270,6 +272,14 @@ public class WifiReceiver extends BroadcastReceiver
                 adapter = new DealAdapter(context, matches);
                 DealRadar.dealList.setAdapter(adapter);
                 DealRadar.dealList.invalidateViews();
+            }
+
+            if(DealRadar.firstLoad)
+            {
+                DealRadar.firstLoad = false;
+                final Animation in = new AlphaAnimation(0.0f, 1.0f);
+                in.setDuration(1000);
+                DealRadar.dealList.startAnimation(in);
             }
 
             setInterrupts(false);

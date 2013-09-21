@@ -1,6 +1,7 @@
 package com.mhacks.dealradar.support;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mhacks.dealradar.DealRadar;
 import com.mhacks.dealradar.R;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class CustomAdapter extends ArrayAdapter<String> {
         String filter = values.get(position);
 
         TextView textView1 = (TextView) rowView.findViewById(R.id.drawer_textview);
+        textView1.setTypeface(DealRadar.myriadProSemiBold);
         textView1.setText(filter);
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.drawer_imageview);
@@ -53,7 +56,8 @@ public class CustomAdapter extends ArrayAdapter<String> {
         } else if (filter.equalsIgnoreCase("Toys")) {
             imageView.setImageResource(R.drawable.toys_menu_item);
         }
-        else{
+        else
+        {
             imageView.setImageResource(R.drawable.all_menu_item);
         }
 

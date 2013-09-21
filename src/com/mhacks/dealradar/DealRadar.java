@@ -64,7 +64,7 @@ public class DealRadar extends Activity
     InputMethodManager imm;
     wifiscan scanThread;
     Context context;
-    boolean firstLoad = true;
+    public static boolean firstLoad = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -92,23 +92,28 @@ public class DealRadar extends Activity
         drawerList = (ListView) findViewById(R.id.left_drawer);
         drawerList.setAdapter(new CustomAdapter(this, listOfCategories));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.nav_button, R.string.app_name, R.string.app_name);
+        drawerLayout.setDrawerListener(drawerToggle);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        DrawerItemClickListener drawerListener = new DrawerItemClickListener();
+        drawerList.setOnItemClickListener(drawerListener);
+        drawerButton = (ImageButton) findViewById(R.id.toggle_button);
+        drawerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if(drawerLayout.isDrawerOpen(drawerList))
+                {
+                    drawerLayout.closeDrawer(drawerList);
+                }
+                else
+                {
+                    drawerLayout.openDrawer(drawerList);
+                }
+            }
+        });
 
-//
-//        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        drawerButton = (ImageButton) findViewById(R.id.toggle_button);
-//        drawerToggle = new ActionBarDrawerToggle(
-//                this,                  // host Activity */
-//                drawerLayout,         // DrawerLayout object */
-//                R.drawable.ic_launcher,  // nav drawer icon to replace 'Up' caret */
-//                R.string.hello_world,  // "open drawer" description */
-//                R.string.hello_world  // "close drawer" description */
-//        );
-//
-//        // Set the drawer toggle as the DrawerListener
-//        drawerLayout.setDrawerListener(drawerToggle);
-//
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//        //drawerButton.setOnClickListener(drawerListener);
 
 
         searchBar = (EditText) findViewById(R.id.search_bar);
@@ -176,7 +181,6 @@ public class DealRadar extends Activity
 
         if(firstLoad)
         {
-            firstLoad = false;
             findMatches();
         }
         else
@@ -265,10 +269,34 @@ public class DealRadar extends Activity
         }
     }
 
+    public void selectItem(int position)
+    {
+        switch(position)
+        {
+            case 0: //All
+                break;
+            case 1: //Food
+                break;
+            case 2: //Clothing
+                break;
+            case 3: //Games
+                break;
+            case 4: //Movies
+                break;
+            case 5: //Pets
+                break;
+            case 6: //Tech
+                break;
+            case 7: //Toys
+                break;
+        }
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
-        public void onItemClick(AdapterView parent, View view, int position, long id) {
-            //selectItem(position);
+        public void onItemClick(AdapterView parent, View view, int position, long id)
+        {
+            selectItem(position);
         }
     }
 

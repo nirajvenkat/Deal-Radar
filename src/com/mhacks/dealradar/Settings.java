@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 
 import com.mhacks.dealradar.support.WifiReceiver;
@@ -39,6 +41,15 @@ public class Settings extends Activity
         actionBar.setCustomView(R.layout.action_bar);
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
+        ImageView navButton = (ImageView) findViewById(R.id.toggle_button);
+        ImageView settingsButton = (ImageView) findViewById(R.id.settings_button);
+        settingsButton.setVisibility(View.GONE);
+        navButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         wifiMonitoring = (Switch) findViewById(R.id.wifi_monitor_selector);
         doNotDisturb = (Switch) findViewById(R.id.do_not_disturb_selector);
         outputWifi = (Button) findViewById(R.id.debug_wireless_output);
@@ -111,7 +122,7 @@ public class Settings extends Activity
                     flagList += "OFF\n";
                 }
                 flagList += "Notifications are ";
-                if(WifiReceiver.getInterruptsEnabled())
+                if(WifiReceiver.getMaySetNotify())
                 {
                     flagList += "ON\n";
                 }

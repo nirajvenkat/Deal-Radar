@@ -125,7 +125,7 @@ public class DealAdapter extends BaseAdapter
         }
         else
         {
-            txtExpDate.setVisibility(View.GONE);
+            txtExpDate.setText("No expiration date");
         }
 
         int signal_rsc = -1;
@@ -181,9 +181,9 @@ public class DealAdapter extends BaseAdapter
             {
                 rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/movies_category", null, null);
             }
-            else if(ad.category.equalsIgnoreCase("Game"))
+            else if(ad.category.equalsIgnoreCase("Games"))
             {
-                rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/game_category", null, null);
+                rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/games_category", null, null);
             }
             else if(ad.category.equalsIgnoreCase("Toys"))
             {
@@ -199,9 +199,6 @@ public class DealAdapter extends BaseAdapter
         {
             imgCategory.setVisibility(View.GONE);
         }
-
-        //Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_right);
-        //itemView.startAnimation(animation);
 
 
         return itemView;
