@@ -1,4 +1,6 @@
 *.class
+bin/
+gen/
 Thumbs.db
 .Trashes
 .Spotlight-V100
