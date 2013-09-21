@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.support.v4.app.FragmentActivity;
 
 import com.mhacks.dealradar.support.TouchImageView;
+import com.mhacks.dealradar.support.WifiReceiver;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -64,9 +65,9 @@ public class FullScreenImageView extends FragmentActivity
                         share.setType("image/png");
 
                         share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(image_path)));
-                        share.putExtra(Intent.EXTRA_TEXT, "Image from Muni");
+                        share.putExtra(Intent.EXTRA_TEXT, "Deal Radar");
 
-                        startActivity(Intent.createChooser(share, "Share Image"));
+                        startActivity(Intent.createChooser(share, "Share Deal"));
                     }
                     catch(Exception e){}
                 }
@@ -141,6 +142,8 @@ public class FullScreenImageView extends FragmentActivity
 
         protected void onPostExecute(Void v)
         {
+            WifiReceiver.setInterrupts(false);
+
             if(image != null)
             {
                 fullscreenimage.setImageBitmap(image);

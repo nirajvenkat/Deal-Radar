@@ -37,6 +37,15 @@
                 android:id="@+id/deal_list_title"
                 android:textSize="20sp"
                 />
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/deal_list_expdate"
+                    android:textStyle="italic"
+                    android:textColor="#cc0000"
+                    android:textSize="20sp"
+                    />
         </LinearLayout>
     </LinearLayout>
 

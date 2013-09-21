@@ -82,7 +82,7 @@ public class DealRadar extends Activity
             {
                 if(!searchBar.getText().toString().isEmpty() && receiverWifi != null)
                 {
-                    receiverWifi.isSearching = true;
+                    WifiReceiver.setInterrupts(true);
                     String search = searchBar.getText().toString().toUpperCase();
                     ArrayList<Advertisement> searchResults = new ArrayList<Advertisement>();
 
@@ -100,7 +100,7 @@ public class DealRadar extends Activity
                 {
                     if(receiverWifi != null)
                     {
-                        receiverWifi.isSearching = false;
+                        WifiReceiver.setInterrupts(false);
                         receiverWifi.adapter.setContent(receiverWifi.matches);
                         receiverWifi.adapter.notifyDataSetChanged();
                     }

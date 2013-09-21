@@ -32,7 +32,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by sdickson on 9/21/13.
@@ -85,14 +87,16 @@ public class DealAdapter extends BaseAdapter
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.deal_list_row, parent, false);
         ImageView signalIndicator;
-        TextView txtCompany, txtTitle;
+        TextView txtCompany, txtTitle, txtExpDate;
         ImageView imgCategory = (ImageView) itemView.findViewById(R.id.deal_list_category_image);
         RelativeLayout rowLayout = (RelativeLayout) itemView.findViewById(R.id.deal_list_row_layout);
         signalIndicator = (ImageView) itemView.findViewById(R.id.deal_list_signal);
         txtCompany = (TextView) itemView.findViewById(R.id.deal_list_company);
         txtTitle = (TextView) itemView.findViewById(R.id.deal_list_title);
+        txtExpDate = (TextView) itemView.findViewById(R.id.deal_list_expdate);
         txtTitle.setTypeface(DealRadar.myriadProRegular);
         txtCompany.setTypeface(DealRadar.myriadProSemiBold);
+        txtExpDate.setTypeface(DealRadar.myriadProRegular);
 
         Advertisement ad = deals.get(position);
 
@@ -112,6 +116,16 @@ public class DealAdapter extends BaseAdapter
         else
         {
             txtTitle.setVisibility(View.GONE);
+        }
+
+        if(ad.expDate != null)
+        {
+            SimpleDateFormat start = new SimpleDateFormat("EEE, MMMM d, yyyy", Locale.US);
+            txtExpDate.setText("Expires " + start.format(ad.expDate));
+        }
+        else
+        {
+            txtExpDate.setVisibility(View.GONE);
         }
 
         int signal_rsc = -1;
@@ -204,7 +218,22 @@ public class DealAdapter extends BaseAdapter
 
         public void onClick(View view)
         {
-            new loadImageFromParse().execute(ad);
+            try
+            {
+                File f = new File(context.getFilesDir() + "/" + ad.objectId + "_uncompressed");
+                if(f != null && f.exists())
+                {
+                    new loadImage().execute(f, ad);
+                }
+                else
+                {
+                    new loadImageFromParse().execute(ad);
+                }
+            }
+            catch(Exception e)
+            {
+                new loadImageFromParse().execute(ad);
+            }
         }
     }
 
@@ -216,6 +245,7 @@ public class DealAdapter extends BaseAdapter
 
         protected void onPreExecute()
         {
+            WifiReceiver.setInterrupts(true);
             super.onPreExecute();
             progressDialog.setCanceledOnTouchOutside(false);
             progressDialog.setCancelable(false);
@@ -296,4 +326,73 @@ public class DealAdapter extends BaseAdapter
             }
         }
     }
+
+    private class loadImage extends AsyncTask<Object, Integer, Void>
+    {
+        Bitmap image;
+        File f;
+        Advertisement ad;
+
+        protected void onPreExecute()
+        {
+            WifiReceiver.setInterrupts(true);
+            progressDialog.show();
+        }
+
+        protected Void doInBackground(Object... arg0)
+        {
+            try
+            {
+                f = (File) arg0[0];
+                ad = (Advertisement) arg0[1];
+                image = BitmapFactory.decodeStream(new FileInputStream(f));
+            }
+            catch(OutOfMemoryError ome)
+            {
+                try
+                {
+                    f = (File) arg0[1];
+
+                    BitmapFactory.Options o = new BitmapFactory.Options();
+                    o.inJustDecodeBounds = true;
+                    BitmapFactory.decodeStream(new FileInputStream(f),null,o);
+                    final int REQUIRED_SIZE=80;
+
+                    int width_tmp=o.outWidth, height_tmp=o.outHeight;
+                    int scale=1;
+                    while(true){
+                        if(width_tmp/2<REQUIRED_SIZE || height_tmp/2<REQUIRED_SIZE)
+                            break;
+                        width_tmp/=2;
+                        height_tmp/=2;
+                        scale*=2;
+                    }
+
+                    BitmapFactory.Options o2 = new BitmapFactory.Options();
+                    o2.inSampleSize=scale;
+                    image = BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
+                }
+                catch(Exception ex){}
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void v)
+        {
+            progressDialog.dismiss();
+            if(image != null)
+            {
+                progressDialog.dismiss();
+                Intent intent = new Intent(context, FullScreenImageView.class);
+                intent.putExtra("image", f.getAbsolutePath());
+                intent.putExtra("caption", ad.title);
+                context.startActivity(intent);
+            }
+        }
+    }
+
 }

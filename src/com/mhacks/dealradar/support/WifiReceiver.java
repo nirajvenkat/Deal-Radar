@@ -42,7 +42,7 @@ public class WifiReceiver extends BroadcastReceiver
     public static DealAdapter adapter;
     public static ArrayList<Advertisement> matches;
     public static ArrayList<Notification> notifications;
-    public static boolean isSearching = false;
+    private static boolean isSearching = false;
 
     public WifiReceiver(WifiManager mainWifi)
     {
@@ -146,6 +146,20 @@ public class WifiReceiver extends BroadcastReceiver
         }
 
         return true;
+    }
+
+    public static void setInterrupts(boolean enabled)
+    {
+        isSearching = enabled;
+
+        if(enabled)
+        {
+            Log.d("fatal", "Interrupts enabled.");
+        }
+        else
+        {
+            Log.d("fatal", "Interrupts disabled.");
+        }
     }
 
     public void onReceive(Context c, Intent intent)
