@@ -1,19 +1,15 @@
 package com.mhacks.dealradar;
 
 import android.app.ActionBar;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.app.Activity;
+
+import com.mhacks.dealradar.support.WifiReceiver;
 import com.parse.Parse;
 import com.parse.ParseAnalytics;
-
-import android.util.Log;
-import java.util.List;
 
 public class DealRadar extends Activity
 {

@@ -10,9 +10,8 @@ public class Constants
     public static final String PARSE_CLIENT_KEY = "sEIXfoVLOEh4ViH8FOUAzbCU3I682quauKFRQerR";
 
     //Wifi Signal Constants
-
     public enum SignalStrength{
-        EXCELLENT, GOOD, FAIR, POOR;
+        EXCELLENT, GOOD, FAIR, POOR, NONE;
     }
 
     public static final int EXCELLENT_SIGNAL_UPPER_BOUND = -45;
