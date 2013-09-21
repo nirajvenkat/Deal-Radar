@@ -52,7 +52,7 @@ public class DealRadar extends Activity
     public static ListView dealList;
     public static ListView drawerList;
     public static ArrayList<String> listOfCategories =
-            new ArrayList<String>(Arrays.asList("All", "Clothing", "Games", "Movies", "Pets", "Tech", "Toys"));
+            new ArrayList<String>(Arrays.asList("All", "Food", "Clothing", "Games", "Movies", "Pets", "Tech", "Toys"));
 
     WifiManager mainWifi;
     WifiReceiver receiverWifi;

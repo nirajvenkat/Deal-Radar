@@ -48,7 +48,7 @@ public class CustomAdapter extends ArrayAdapter<String> {
             imageView.setImageResource(R.drawable.pets_menu_item);
         } else if (filter.equalsIgnoreCase("Movies")) {
             imageView.setImageResource(R.drawable.movies_menu_icon);
-        } else if (filter.equalsIgnoreCase("Game")) {
+        } else if (filter.equalsIgnoreCase("Games")) {
             imageView.setImageResource(R.drawable.games_menu_item);
         } else if (filter.equalsIgnoreCase("Toys")) {
             imageView.setImageResource(R.drawable.toys_menu_item);
