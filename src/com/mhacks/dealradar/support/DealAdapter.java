@@ -84,10 +84,11 @@ public class DealAdapter extends BaseAdapter
     {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.deal_list_row, parent, false);
-        TextView signalIndicator, txtCompany, txtTitle;
+        ImageView signalIndicator;
+        TextView txtCompany, txtTitle;
         ImageView imgCategory = (ImageView) itemView.findViewById(R.id.deal_list_category_image);
         RelativeLayout rowLayout = (RelativeLayout) itemView.findViewById(R.id.deal_list_row_layout);
-        signalIndicator = (TextView) itemView.findViewById(R.id.deal_list_signal);
+        signalIndicator = (ImageView) itemView.findViewById(R.id.deal_list_signal);
         txtCompany = (TextView) itemView.findViewById(R.id.deal_list_company);
         txtTitle = (TextView) itemView.findViewById(R.id.deal_list_title);
         txtTitle.setTypeface(DealRadar.myriadProRegular);
@@ -115,19 +116,19 @@ public class DealAdapter extends BaseAdapter
 
         if(ad.signalStrength == Constants.SignalStrength.EXCELLENT)
         {
-            signalIndicator.setTextColor(Color.GREEN);
+
         }
         else if(ad.signalStrength == Constants.SignalStrength.GOOD)
         {
-            signalIndicator.setTextColor(Color.parseColor("#99CC99"));
+
         }
         else if(ad.signalStrength == Constants.SignalStrength.FAIR)
         {
-            signalIndicator.setTextColor(Color.YELLOW);
+
         }
         else
         {
-            signalIndicator.setTextColor(Color.RED);
+
         }
 
         if(ad.image_url != null)
