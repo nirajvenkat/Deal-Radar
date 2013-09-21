@@ -114,21 +114,28 @@ public class DealAdapter extends BaseAdapter
             txtTitle.setVisibility(View.GONE);
         }
 
+        int signal_rsc = -1;
+
         if(ad.signalStrength == Constants.SignalStrength.EXCELLENT)
         {
-
+            signal_rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/wifi_full", null, null);
         }
         else if(ad.signalStrength == Constants.SignalStrength.GOOD)
         {
-
+            signal_rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/wifi_good", null, null);
         }
         else if(ad.signalStrength == Constants.SignalStrength.FAIR)
         {
-
+            signal_rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/wifi_medium", null, null);
         }
         else
         {
+            signal_rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/wifi_low", null, null);
+        }
 
+        if(signal_rsc != -1)
+        {
+            signalIndicator.setImageResource(signal_rsc);
         }
 
         if(ad.image_url != null)
@@ -179,8 +186,8 @@ public class DealAdapter extends BaseAdapter
             imgCategory.setVisibility(View.GONE);
         }
 
-        Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_right);
-        itemView.startAnimation(animation);
+        //Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_right);
+        //itemView.startAnimation(animation);
 
 
         return itemView;

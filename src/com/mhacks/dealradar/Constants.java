@@ -28,5 +28,4 @@ public class Constants
 
     //Wifi Scanning Constants
     public static final int ASYNC_SCAN_TICK = 3; //In seconds!
-    public static final int PARSE_REFRESH_TICK = 1; //In minutes!
 }

@@ -15,7 +15,6 @@
     <ImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@drawable/wifi_medium"
         android:gravity="center_vertical"
         android:layout_marginRight="20dp"
         android:id="@+id/deal_list_signal"/>

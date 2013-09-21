@@ -39,9 +39,10 @@ public class WifiReceiver extends BroadcastReceiver
     private List<ScanResult> wifiList;
     private WifiManager mainWifi;
     private Context context;
-    private DealAdapter adapter;
+    public static DealAdapter adapter;
     public static ArrayList<Advertisement> matches;
     public static ArrayList<Notification> notifications;
+    public static boolean isSearching = false;
 
     public WifiReceiver(WifiManager mainWifi)
     {
@@ -149,10 +150,12 @@ public class WifiReceiver extends BroadcastReceiver
 
     public void onReceive(Context c, Intent intent)
     {
+        if(!isSearching)
+        {
         context = c;
         Log.d("fatal", "Scan at " + System.currentTimeMillis());
         wifiList = mainWifi.getScanResults();
-        ArrayList<Advertisement> matchingAds = new ArrayList<Advertisement>();
+        matches = new ArrayList<Advertisement>();
         int i = 0;
 
         for(ScanResult accessPoint : wifiList)
@@ -163,7 +166,7 @@ public class WifiReceiver extends BroadcastReceiver
                 {
                     //Log.d("fatal", ad.title);
                     ad.signalStrength = getSignalStrength(accessPoint);
-                    matchingAds.add(ad);
+                    matches.add(ad);
 
                     if(!notificationExists(ad))
                     {
@@ -178,17 +181,20 @@ public class WifiReceiver extends BroadcastReceiver
 
         if(adapter != null)
         {
-            if(!noChangesToArray(matchingAds))
+            if(!noChangesToArray(matches))
             {
-                adapter.setContent(matchingAds);
+                adapter.setContent(matches);
                 DealRadar.dealList.invalidateViews();
+
+                //Remove notifications here
             }
         }
         else
         {
-            adapter = new DealAdapter(context, matchingAds);
+            adapter = new DealAdapter(context, matches);
             DealRadar.dealList.setAdapter(adapter);
             DealRadar.dealList.invalidateViews();
+        }
         }
 
     }
