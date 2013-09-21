@@ -14,10 +14,13 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mhacks.dealradar.Constants;
+import com.mhacks.dealradar.DealRadar;
 import com.mhacks.dealradar.FullScreenImageView;
 import com.mhacks.dealradar.R;
 import com.mhacks.dealradar.objects.Advertisement;
@@ -82,10 +85,13 @@ public class DealAdapter extends BaseAdapter
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.deal_list_row, parent, false);
         TextView signalIndicator, txtCompany, txtTitle;
-        LinearLayout rowLayout = (LinearLayout) itemView.findViewById(R.id.deal_list_row_layout);
+        ImageView imgCategory = (ImageView) itemView.findViewById(R.id.deal_list_category_image);
+        RelativeLayout rowLayout = (RelativeLayout) itemView.findViewById(R.id.deal_list_row_layout);
         signalIndicator = (TextView) itemView.findViewById(R.id.deal_list_signal);
         txtCompany = (TextView) itemView.findViewById(R.id.deal_list_company);
         txtTitle = (TextView) itemView.findViewById(R.id.deal_list_title);
+        txtTitle.setTypeface(DealRadar.myriadProRegular);
+        txtCompany.setTypeface(DealRadar.myriadProSemiBold);
 
         Advertisement ad = deals.get(position);
 
@@ -127,6 +133,49 @@ public class DealAdapter extends BaseAdapter
         if(ad.image_url != null)
         {
             rowLayout.setOnClickListener(new RowClickListener(ad));
+        }
+
+        if(ad.category != null && !ad.category.isEmpty())
+        {
+            int rsc = -1;
+
+            if(ad.category.equalsIgnoreCase("Food"))
+            {
+                rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/food_category", null, null);
+            }
+            else if(ad.category.equalsIgnoreCase("Clothing"))
+            {
+                rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/clothing_category", null, null);
+            }
+            else if(ad.category.equalsIgnoreCase("Tech"))
+            {
+                rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/tech_category", null, null);
+            }
+            else if(ad.category.equalsIgnoreCase("Pets"))
+            {
+                rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/pets_category", null, null);
+            }
+            else if(ad.category.equalsIgnoreCase("Movies"))
+            {
+                rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/movies_category", null, null);
+            }
+            else if(ad.category.equalsIgnoreCase("Game"))
+            {
+                rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/game_category", null, null);
+            }
+            else if(ad.category.equalsIgnoreCase("Toys"))
+            {
+                rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/toys_category", null, null);
+            }
+
+            if(rsc != -1)
+            {
+                imgCategory.setImageResource(rsc);
+            }
+        }
+        else
+        {
+            imgCategory.setVisibility(View.GONE);
         }
 
         Animation animation = AnimationUtils.loadAnimation(context, R.anim.slide_right);

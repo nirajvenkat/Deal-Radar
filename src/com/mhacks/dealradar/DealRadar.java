@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.mhacks.dealradar.objects.Advertisement;
 import com.mhacks.dealradar.support.DealAdapter;
@@ -25,11 +27,14 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class DealRadar extends Activity
 {
     public static ArrayList<Advertisement> advertisements;
+    public static Typeface myriadProRegular, myriadProSemiBold;
     public static ListView dealList;
 
     WifiManager mainWifi;
@@ -47,6 +52,10 @@ public class DealRadar extends Activity
         actionBar.setCustomView(R.layout.action_bar);;
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
+        myriadProRegular = Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Regular.otf");
+        myriadProSemiBold = Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf");
+        TextView txtTitle = (TextView) findViewById(R.id.action_bar_title);
+        txtTitle.setTypeface(myriadProSemiBold);
     }
 
     public void onResume()
@@ -55,6 +64,24 @@ public class DealRadar extends Activity
         mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         receiverWifi = new WifiReceiver(mainWifi);
         findMatches();
+    }
+
+    private Date fixDate(Date date)
+    {
+        TimeZone tz = TimeZone.getDefault();
+        Date fixed = new Date(date.getTime() - tz.getRawOffset());
+
+        if(tz.inDaylightTime(fixed))
+        {
+            Date dst = new Date(fixed.getTime() - tz.getDSTSavings());
+
+            if(tz.inDaylightTime(dst))
+            {
+                fixed = dst;
+            }
+        }
+
+        return fixed;
     }
 
     public void findMatches()
@@ -72,6 +99,12 @@ public class DealRadar extends Activity
                                 Advertisement tmp = new Advertisement();
                                 tmp.objectId = parse.getObjectId();
                                 tmp.title = parse.getString("Deal_Title");
+                                tmp.category = parse.getString("Category");
+
+                                if(parse.getDate("Exp_Date") != null)
+                                {
+                                    tmp.expDate = fixDate(parse.getDate("Exp_Date"));
+                                }
                                 tmp.company = parse.getString("Company");
                                 tmp.BSSID = parse.getString("BSSID");
 

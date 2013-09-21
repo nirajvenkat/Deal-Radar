@@ -16,13 +16,24 @@ import com.mhacks.dealradar.R;
 
 public class Notification {
 
-    Context context;
+    private Context context;
+    private int mId;
+    private String title, text, objectId;
 
-    public Notification(Context context) {
+    public Notification(Context context, int mId, String title, String text, String objectId) {
         this.context = context;
+        this.mId = mId;
+        this.title = title;
+        this.text = text;
+        this.objectId = objectId;
     }
 
-    public void pushNotification(int mId, String title, String text) {
+    public String getObjectId()
+    {
+        return objectId;
+    }
+
+    public void pushNotification() {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)

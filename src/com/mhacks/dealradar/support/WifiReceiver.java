@@ -41,10 +41,12 @@ public class WifiReceiver extends BroadcastReceiver
     private Context context;
     private DealAdapter adapter;
     public static ArrayList<Advertisement> matches;
+    public static ArrayList<Notification> notifications;
 
     public WifiReceiver(WifiManager mainWifi)
     {
         this.mainWifi = mainWifi;
+        notifications = new ArrayList<Notification>();
     }
 
     public List<ScanResult> getWifiList()
@@ -114,6 +116,19 @@ public class WifiReceiver extends BroadcastReceiver
         return Constants.SignalStrength.NONE;
     }
 
+    private boolean notificationExists(Advertisement ad)
+    {
+        for(Notification n : notifications)
+        {
+            if(n.getObjectId().equals(ad.objectId))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private boolean noChangesToArray(ArrayList<Advertisement> changeList)
     {
         if(changeList.size() != adapter.deals.size())
@@ -138,6 +153,7 @@ public class WifiReceiver extends BroadcastReceiver
         Log.d("fatal", "Scan at " + System.currentTimeMillis());
         wifiList = mainWifi.getScanResults();
         ArrayList<Advertisement> matchingAds = new ArrayList<Advertisement>();
+        int i = 0;
 
         for(ScanResult accessPoint : wifiList)
         {
@@ -148,6 +164,14 @@ public class WifiReceiver extends BroadcastReceiver
                     //Log.d("fatal", ad.title);
                     ad.signalStrength = getSignalStrength(accessPoint);
                     matchingAds.add(ad);
+
+                    if(!notificationExists(ad))
+                    {
+                        Notification tmp = new Notification(context, i++, ad.company, ad.title, ad.objectId);
+                        tmp.pushNotification();
+                        notifications.add(tmp);
+
+                    }
                 }
             }
         }
