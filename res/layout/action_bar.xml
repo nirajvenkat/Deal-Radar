@@ -5,7 +5,7 @@
                 android:layout_height="fill_parent"
                 android:layout_gravity="center"
                 android:paddingLeft="15dp"
-                android:background="@drawable/menu_bar"
+                android:background="@drawable/action_bar"
                 android:paddingRight="5dp"
                 android:orientation="horizontal">
 
@@ -28,5 +28,16 @@
             android:id="@+id/action_bar_title"
             android:textStyle="bold"
             android:layout_centerInParent="true"/>
+
+    <ImageButton
+            android:background="@null"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/settings_icon"
+            android:layout_centerVertical="true"
+            android:id="@+id/settings_button"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentRight="true"/>
 
 </RelativeLayout>

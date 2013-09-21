@@ -38,14 +38,16 @@ import java.util.List;
  */
 public class WifiReceiver extends BroadcastReceiver
 {
-    private List<ScanResult> wifiList;
+    private static List<ScanResult> wifiList;
     private WifiManager mainWifi;
     private Context context;
     public static DealAdapter adapter;
     public static ArrayList<Advertisement> matches;
     public static ArrayList<Notification> notifications;
     private AdapterHandler handler;
+
     private static boolean isSearching = false;
+    private static boolean mayNotify = true;
 
     public WifiReceiver(WifiManager mainWifi)
     {
@@ -54,9 +56,9 @@ public class WifiReceiver extends BroadcastReceiver
         handler = new AdapterHandler();
     }
 
-    public List<ScanResult> getWifiList()
+    public static Object[] getWifiList()
     {
-        return wifiList;
+        return wifiList.toArray();
     }
 
     public List<ScanResult> getFilteredWifiList(Constants.SignalStrength filters[])
@@ -166,6 +168,35 @@ public class WifiReceiver extends BroadcastReceiver
         }
     }
 
+    public static boolean getInterruptsEnabled()
+    {
+        return isSearching;
+    }
+
+    public static boolean getMaySetNotify()
+    {
+        return mayNotify;
+    }
+
+    public static void setMayNotify(boolean enabled)
+    {
+        mayNotify = enabled;
+
+        if(enabled)
+        {
+            Log.d("fatal", "Notifications enabled.");
+        }
+        else
+        {
+            Log.d("fatal", "Notifications disabled.");
+            for(Notification n : notifications)
+            {
+                n.remove();
+            }
+            notifications = new ArrayList<Notification>();
+        }
+    }
+
     public void onReceive(Context c, Intent intent)
     {
         if(!isSearching)
@@ -199,7 +230,7 @@ public class WifiReceiver extends BroadcastReceiver
                         ad.signalStrength = getSignalStrength(accessPoint);
                         matches.add(ad);
 
-                        if(!notificationExists(ad))
+                        if(!notificationExists(ad) && mayNotify)
                         {
                             Notification tmp = new Notification(context, i++, ad.company, ad.title, ad.objectId);
                             tmp.pushNotification();

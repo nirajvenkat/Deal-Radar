@@ -58,10 +58,11 @@ public class DealRadar extends Activity
     ProgressDialog progressDialog;
     DrawerLayout drawerLayout;
     EditText searchBar;
-    ImageButton drawerButton;
+    ImageButton drawerButton, settingsButton;
     ActionBarDrawerToggle drawerToggle;
     InputMethodManager imm;
     wifiscan scanThread;
+    Context context;
     boolean firstLoad = true;
 
 	@Override
@@ -69,6 +70,7 @@ public class DealRadar extends Activity
     {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+        this.context = this;
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Parse.initialize(this,  Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
         ParseAnalytics.trackAppOpened(getIntent());
@@ -147,6 +149,19 @@ public class DealRadar extends Activity
             @Override
             public void afterTextChanged(Editable editable)
             {
+            }
+        });
+
+        settingsButton = (ImageButton) findViewById(R.id.settings_button);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(context, Settings.class);
+                if(intent != null)
+                {
+                    startActivity(intent);
+                }
             }
         });
     }

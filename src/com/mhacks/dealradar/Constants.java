@@ -14,7 +14,7 @@ public class Constants
         EXCELLENT, GOOD, FAIR, POOR, NONE;
     }
 
-    public static final int EXCELLENT_SIGNAL_UPPER_BOUND = -45;
+    public static final int EXCELLENT_SIGNAL_UPPER_BOUND = 0;
     public static final int EXCELLENT_SIGNAL_LOWER_BOUND = -57;
 
     public static final int GOOD_SIGNAL_UPPER_BOUND = -58;

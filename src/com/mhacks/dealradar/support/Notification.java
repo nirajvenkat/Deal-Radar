@@ -19,6 +19,9 @@ public class Notification {
     private Context context;
     private int mId;
     private String title, text, objectId;
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mBuilder;
+    private PendingIntent resultPendingIntent;
 
     public Notification(Context context, int mId, String title, String text, String objectId) {
         this.context = context;
@@ -34,7 +37,7 @@ public class Notification {
     }
 
     public void pushNotification() {
-        NotificationCompat.Builder mBuilder =
+        mBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setContentTitle(title)
@@ -51,15 +54,20 @@ public class Notification {
         stackBuilder.addParentStack(DealRadar.class);
 // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
+        resultPendingIntent =
                 stackBuilder.getPendingIntent(
                         0,
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
+        mNotificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 // mId allows you to update the notification later on.
         mNotificationManager.notify(mId, mBuilder.build());
+    }
+
+    public void remove()
+    {
+        mNotificationManager.cancel(mId);
     }
 }
