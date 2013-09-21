@@ -10,6 +10,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.mhacks.dealradar.objects.Advertisement;
@@ -58,6 +59,7 @@ public class DealRadar extends Activity
 
     public void findMatches()
     {
+        Log.d("fatal", "Refreshing Parse...");
         advertisements = new ArrayList<Advertisement>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Routers");
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -111,5 +113,7 @@ public class DealRadar extends Activity
             return null;
         }
     }
+
+
 
 }

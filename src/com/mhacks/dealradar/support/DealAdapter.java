@@ -53,7 +53,7 @@ public class DealAdapter extends BaseAdapter
         progressDialog.setIndeterminate(false);
         progressDialog.setMax(100);
         progressDialog.setProgressNumberFormat(null);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
     }
 
     public void setContent(ArrayList<Advertisement> deals)

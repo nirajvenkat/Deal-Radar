@@ -135,7 +135,7 @@ public class WifiReceiver extends BroadcastReceiver
     public void onReceive(Context c, Intent intent)
     {
         context = c;
-        Log.d("fatal", "Recieve at " + System.currentTimeMillis());
+        Log.d("fatal", "Scan at " + System.currentTimeMillis());
         wifiList = mainWifi.getScanResults();
         ArrayList<Advertisement> matchingAds = new ArrayList<Advertisement>();
 
@@ -145,7 +145,7 @@ public class WifiReceiver extends BroadcastReceiver
             {
                 if(accessPoint.BSSID.equalsIgnoreCase(ad.BSSID))
                 {
-                    Log.d("fatal", ad.title);
+                    //Log.d("fatal", ad.title);
                     ad.signalStrength = getSignalStrength(accessPoint);
                     matchingAds.add(ad);
                 }
