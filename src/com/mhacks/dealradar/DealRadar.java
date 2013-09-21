@@ -13,17 +13,12 @@ import com.parse.Parse;
 import com.parse.ParseAnalytics;
 
 import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.widget.ImageView;
-
 import java.util.List;
 
 public class DealRadar extends Activity
 {
     WifiManager mainWifi;
     WifiReceiver receiverWifi;
-    List<ScanResult> wifiList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -38,7 +33,7 @@ public class DealRadar extends Activity
         actionBar.setDisplayShowCustomEnabled(true);
 
         mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        receiverWifi = new WifiReceiver();
+        receiverWifi = new WifiReceiver(mainWifi);
         registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
         mainWifi.startScan();
     }
@@ -48,16 +43,6 @@ public class DealRadar extends Activity
         super.onResume();
     }
 
-    class WifiReceiver extends BroadcastReceiver
-    {
-        public void onReceive(Context c, Intent intent)
-        {
-            wifiList = mainWifi.getScanResults();
-            for(int i = 0; i < wifiList.size(); i++)
-            {
-                Log.d("fatal", wifiList.get(i).SSID + ", " + wifiList.get(i).BSSID);
-            }
-        }
-    }
+
 
 }
