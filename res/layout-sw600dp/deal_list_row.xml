@@ -67,4 +67,12 @@
         </LinearLayout>
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/rating"
+        android:layout_toRightOf="@+id/deal_list_top_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/rating_one"/>
+
 </RelativeLayout>
