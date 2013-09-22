@@ -179,9 +179,13 @@ public class DealRadar extends Activity
     public void onResume()
     {
         super.onResume();
-        mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        receiverWifi = new WifiReceiver(mainWifi);
-        registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+
+        if(mainWifi == null)
+        {
+            mainWifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+            receiverWifi = new WifiReceiver(mainWifi);
+            registerReceiver(receiverWifi, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        }
 
         if(firstLoad)
         {
@@ -227,6 +231,7 @@ public class DealRadar extends Activity
                         tmp.objectId = parse.getObjectId();
                         tmp.title = parse.getString("Deal_Title");
                         tmp.category = parse.getString("Category");
+                        tmp.rating = parse.getInt("Rating");
 
                         if (parse.getDate("Exp_Date") != null) {
                             tmp.expDate = fixDate(parse.getDate("Exp_Date"));

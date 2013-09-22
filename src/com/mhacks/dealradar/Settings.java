@@ -125,6 +125,7 @@ public class Settings extends Activity
             {
                 try
                 {
+                    DealRadar.firstLoad = true;
                     handler.send(new Message());
                 }
                 catch(Exception e)

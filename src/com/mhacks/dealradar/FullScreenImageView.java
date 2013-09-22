@@ -1,6 +1,8 @@
 package com.mhacks.dealradar;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,15 +12,23 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
+import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.support.v4.app.FragmentActivity;
 
+import com.mhacks.dealradar.objects.Advertisement;
 import com.mhacks.dealradar.support.TouchImageView;
 import com.mhacks.dealradar.support.WifiReceiver;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
 
 /**
  * Created by sdickson on 8/6/13.
@@ -29,15 +39,18 @@ public class FullScreenImageView extends FragmentActivity
     Bitmap raw_image;
     RelativeLayout fullscreenimagelayout;
     TouchImageView fullscreenimage;
-    TextView fullscreencaption, fullscreenshare;
+    TextView fullscreencaption, fullscreenshare, fullscreenrate;
     ProgressDialog progressDialog;
     FullScreenImageView fsiv;
+    Context context;
+    Advertisement ad;
 
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fullscreenimageview);
         fsiv = this;
+        context = this;
         Intent data = this.getIntent();
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -48,13 +61,16 @@ public class FullScreenImageView extends FragmentActivity
         {
             image_path = data.getStringExtra("image");
             caption = data.getStringExtra("caption");
+            ad = (Advertisement) data.getSerializableExtra("ad");
             //raw_image = data.getParcelableExtra("raw_image");
             fullscreenimagelayout = (RelativeLayout) findViewById(R.id.fullscreenimage_layout);
             fullscreenimage = (TouchImageView) findViewById(R.id.fullscreenimage);
             fullscreencaption = (TextView) findViewById(R.id.fullscreenimage_caption);
-            //fullscreencaption.setTypeface(MainActivity.myriadProRegular);
+            fullscreencaption.setTypeface(DealRadar.myriadProRegular);
             fullscreenshare = (TextView) findViewById(R.id.fullscreenimage_share);
-            //fullscreenshare.setTypeface(MainActivity.myriadProSemiBold);
+            fullscreenshare.setTypeface(DealRadar.myriadProSemiBold);
+            fullscreenrate = (TextView) findViewById(R.id.fullscreenimage_rate);
+            fullscreenrate.setTypeface(DealRadar.myriadProSemiBold);
             fullscreenshare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view)
@@ -70,6 +86,59 @@ public class FullScreenImageView extends FragmentActivity
                         startActivity(Intent.createChooser(share, "Share Deal"));
                     }
                     catch(Exception e){}
+                }
+            });
+            fullscreenrate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view)
+                {
+                    final Dialog d = new Dialog(context);
+                    d.setCanceledOnTouchOutside(false);
+                    d.setTitle("Rate this Deal");
+                    d.setContentView(R.layout.rating_dialog);
+                    Button cancel = (Button) d.findViewById(R.id.numberPicker_cancel);
+                    Button rate = (Button) d.findViewById(R.id.numberPicker_rate);
+                    final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker);
+                    np.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+                    np.setMaxValue(5);
+                    np.setMinValue(1);
+                    np.setWrapSelectorWheel(false);
+                    rate.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v)
+                        {
+                            if(ad != null)
+                            {
+                                ParseQuery<ParseObject> query = ParseQuery.getQuery("Routers");
+                                query.whereEqualTo("objectId", ad.objectId);
+                                query.findInBackground(new FindCallback<ParseObject>() {
+                                    public void done(List<ParseObject> result, ParseException e) {
+                                        if (e == null)
+                                        {
+                                            for (ParseObject parse : result)
+                                            {
+                                                int numRatings = parse.getInt("Num_Ratings");
+                                                int newRating = Math.round((numRatings + np.getValue()) / ++numRatings);
+                                                ad.rating = newRating;
+                                                parse.put("Rating", newRating);
+                                                parse.increment("Num_Ratings");
+                                                parse.saveInBackground();
+                                                break;
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                            d.dismiss();
+                        }
+                    });
+                    cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            d.dismiss();
+                        }
+                    });
+                    d.show();
                 }
             });
         }

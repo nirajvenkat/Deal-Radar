@@ -86,11 +86,12 @@ public class DealAdapter extends BaseAdapter
     {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.deal_list_row, parent, false);
-        ImageView signalIndicator;
+        ImageView signalIndicator, rating;
         TextView txtCompany, txtTitle, txtExpDate;
         ImageView imgCategory = (ImageView) itemView.findViewById(R.id.deal_list_category_image);
         RelativeLayout rowLayout = (RelativeLayout) itemView.findViewById(R.id.deal_list_row_layout);
         signalIndicator = (ImageView) itemView.findViewById(R.id.deal_list_signal);
+        rating = (ImageView) itemView.findViewById(R.id.rating);
         txtCompany = (TextView) itemView.findViewById(R.id.deal_list_company);
         txtTitle = (TextView) itemView.findViewById(R.id.deal_list_title);
         txtExpDate = (TextView) itemView.findViewById(R.id.deal_list_expdate);
@@ -198,6 +199,31 @@ public class DealAdapter extends BaseAdapter
         else
         {
             imgCategory.setVisibility(View.GONE);
+        }
+
+        if(rating != null && ad.rating != null)
+        {
+            int rsc = -1;
+            switch(ad.rating)
+            {
+                case 1:
+                    rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/rating_one", null, null);
+                    break;
+                case 2:
+                    rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/rating_two", null, null);
+                    break;
+                case 3:
+                    rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/rating_three", null, null);
+                    break;
+                case 4:
+                    rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/rating_four", null, null);
+                    break;
+                case 5:
+                    rsc = context.getResources().getIdentifier("com.mhacks.dealradar:drawable/rating_five", null, null);
+                    break;
+            }
+
+            rating.setImageResource(rsc);
         }
 
 
@@ -318,6 +344,7 @@ public class DealAdapter extends BaseAdapter
                 Intent intent = new Intent(context, FullScreenImageView.class);
                 intent.putExtra("image", file.getAbsolutePath());
                 intent.putExtra("caption", ad.title);
+                intent.putExtra("ad", ad);
                 context.startActivity(intent);
 
             }
@@ -387,6 +414,7 @@ public class DealAdapter extends BaseAdapter
                 Intent intent = new Intent(context, FullScreenImageView.class);
                 intent.putExtra("image", f.getAbsolutePath());
                 intent.putExtra("caption", ad.title);
+                intent.putExtra("ad", ad);
                 context.startActivity(intent);
             }
         }

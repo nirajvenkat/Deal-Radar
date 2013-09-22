@@ -33,6 +33,7 @@
                 android:layout_marginRight="20dp"
                 android:id="@+id/deal_list_signal"/>
         <LinearLayout
+                android:id="@+id/layout_titles"
                 android:orientation="vertical"
                 android:gravity="center_vertical"
                 android:layout_width="wrap_content"
@@ -69,10 +70,10 @@
 
     <ImageView
         android:id="@+id/rating"
-        android:layout_toRightOf="@+id/deal_list_top_layout"
+        android:layout_toLeftOf="@+id/deal_list_category_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
         android:src="@drawable/rating_one"/>
 
 </RelativeLayout>

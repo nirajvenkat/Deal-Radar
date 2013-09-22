@@ -2,12 +2,13 @@ package com.mhacks.dealradar.objects;
 
 import com.mhacks.dealradar.Constants;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by sdickson on 9/21/13.
  */
-public class Advertisement
+public class Advertisement implements Serializable
 {
     public String objectId;
     public String company;
@@ -16,7 +17,7 @@ public class Advertisement
     public String category;
     public Date expDate;
     public String BSSID;
-    public boolean notified = false;
+    public Integer rating;
     public Constants.SignalStrength signalStrength;
 
     public boolean equals(Object other)
