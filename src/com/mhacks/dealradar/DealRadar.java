@@ -231,7 +231,12 @@ public class DealRadar extends Activity
                         tmp.objectId = parse.getObjectId();
                         tmp.title = parse.getString("Deal_Title");
                         tmp.category = parse.getString("Category");
-                        tmp.rating = Math.round(parse.getInt("Rating") / parse.getInt("Num_Ratings"));
+
+                        try
+                        {
+                            tmp.rating = Math.round(parse.getInt("Rating") / parse.getInt("Num_Ratings"));
+                        }
+                        catch(Exception ex){}
 
                         if (parse.getDate("Exp_Date") != null) {
                             tmp.expDate = fixDate(parse.getDate("Exp_Date"));
