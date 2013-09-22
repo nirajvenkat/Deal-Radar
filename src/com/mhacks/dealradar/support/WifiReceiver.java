@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -48,7 +49,7 @@ public class WifiReceiver extends BroadcastReceiver
     public static ArrayList<Advertisement> matches;
     public static ArrayList<Notification> notifications;
     private AdapterHandler handler;
-
+    private String current_filter = "All";
     private static boolean isSearching = false;
     private static boolean mayNotify = true;
 
@@ -85,6 +86,13 @@ public class WifiReceiver extends BroadcastReceiver
         }
 
         return filteredList;
+    }
+
+    public void setCurrentFilter(String filter)
+    {
+        setInterrupts(true);
+        current_filter = filter;
+        handler.sendEmptyMessage(0);
     }
 
     public int getNumNetworks()
@@ -243,7 +251,6 @@ public class WifiReceiver extends BroadcastReceiver
                 }
             }
 
-
             return null;
         }
 
@@ -257,11 +264,28 @@ public class WifiReceiver extends BroadcastReceiver
     {
         public void handleMessage(Message msg)
         {
+            ArrayList<Advertisement> content = new ArrayList<Advertisement>();
+
+            if(!current_filter.equalsIgnoreCase("All"))
+            {
+                for(Advertisement match : matches)
+                {
+                    if(match.category.equalsIgnoreCase(current_filter))
+                    {
+                        content.add(match);
+                    }
+                }
+            }
+            else
+            {
+                content = matches;
+            }
+
             if(adapter != null)
             {
-                if(!noChangesToArray(matches))
+                if(!noChangesToArray(content))
                 {
-                    adapter.setContent(matches);
+                    adapter.setContent(content);
                     DealRadar.dealList.invalidateViews();
 
                     //Remove notifications here
@@ -269,7 +293,7 @@ public class WifiReceiver extends BroadcastReceiver
             }
             else
             {
-                adapter = new DealAdapter(context, matches);
+                adapter = new DealAdapter(context, content);
                 DealRadar.dealList.setAdapter(adapter);
                 DealRadar.dealList.invalidateViews();
             }
@@ -280,6 +304,22 @@ public class WifiReceiver extends BroadcastReceiver
                 final Animation in = new AlphaAnimation(0.0f, 1.0f);
                 in.setDuration(1000);
                 DealRadar.dealList.startAnimation(in);
+            }
+
+            if(content.size() == 0)
+            {
+                DealRadar.noEvents.setVisibility(View.VISIBLE);
+                DealRadar.dealList.setVisibility(View.GONE);
+                DealRadar.searchBar.setEnabled(false);
+            }
+            else
+            {
+                if(DealRadar.noEvents.getVisibility() == View.VISIBLE)
+                {
+                    DealRadar.noEvents.setVisibility(View.GONE);
+                    DealRadar.dealList.setVisibility(View.VISIBLE);
+                    DealRadar.searchBar.setEnabled(true);
+                }
             }
 
             setInterrupts(false);

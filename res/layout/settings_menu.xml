@@ -80,6 +80,14 @@
         android:layout_width="wrap_content"/>
 
     <Button
+            android:id="@+id/debug_reload_parse"
+            android:text="Reload Parse Data"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+
+    <Button
             android:id="@+id/debug_flags"
             android:text="Show Flags"
             android:layout_gravity="center_horizontal"
