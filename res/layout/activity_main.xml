@@ -14,6 +14,7 @@
             android:hint="Search all deals"
             android:layout_width="match_parent"
             android:inputType="text"
+            android:textColor="#ffffff"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:drawableLeft="@drawable/search" />
@@ -27,6 +28,16 @@
             android:dividerHeight="10dp"
             android:clipToPadding="false"
             android:divider="@android:color/transparent" />
+        <TextView
+            android:padding="10dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:id="@+id/no_deals"
+            android:textSize="30sp"
+            android:visibility="gone"
+            android:text="No Nearby Deals"/>
+
     </LinearLayout>
     <!-- The navigation drawer -->
     <ListView

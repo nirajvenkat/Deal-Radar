@@ -3,12 +3,15 @@ package com.mhacks.dealradar;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.v4.app.FragmentActivity;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -29,14 +32,22 @@ import java.util.List;
 public class Settings extends Activity
 {
     Switch wifiMonitoring, doNotDisturb;
-    Button outputWifi, debugFlags;
+    Button outputWifi, debugFlags, reloadParse;
     Context context;
+    Messenger handler;
+    ProgressDialog progressDialog;
 
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_menu);
         this.context = this;
+
+        if(getIntent() != null)
+        {
+            handler = (Messenger) getIntent().getParcelableExtra("HANDLER");
+        }
+
         ActionBar actionBar = getActionBar();
         actionBar.setCustomView(R.layout.action_bar);
         actionBar.setDisplayShowHomeEnabled(false);
@@ -54,6 +65,7 @@ public class Settings extends Activity
         doNotDisturb = (Switch) findViewById(R.id.do_not_disturb_selector);
         outputWifi = (Button) findViewById(R.id.debug_wireless_output);
         debugFlags = (Button) findViewById(R.id.debug_flags);
+        reloadParse = (Button) findViewById(R.id.debug_reload_parse);
 
         wifiMonitoring.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -103,6 +115,22 @@ public class Settings extends Activity
                             }
                         })
                         .show();
+            }
+        });
+
+        reloadParse.setOnClickListener(new View.OnClickListener()
+        {
+
+            public void onClick(View view)
+            {
+                try
+                {
+                    handler.send(new Message());
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
             }
         });
 

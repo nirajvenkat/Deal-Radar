@@ -12,6 +12,9 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
@@ -54,14 +57,15 @@ public class DealRadar extends Activity
     public static ArrayList<String> listOfCategories =
             new ArrayList<String>(Arrays.asList("All", "Food", "Clothing", "Games", "Movies", "Pets", "Tech", "Toys"));
 
+    ParseHandler handler;
     WifiManager mainWifi;
     WifiReceiver receiverWifi;
     ProgressDialog progressDialog;
     DrawerLayout drawerLayout;
-    EditText searchBar;
+    public static EditText searchBar;
+    public static TextView noEvents;
     ImageButton drawerButton, settingsButton;
     ActionBarDrawerToggle drawerToggle;
-    InputMethodManager imm;
     wifiscan scanThread;
     Context context;
     public static boolean firstLoad = true;
@@ -72,13 +76,14 @@ public class DealRadar extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
         this.context = this;
+        handler = new ParseHandler();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Parse.initialize(this,  Constants.PARSE_APPLICATION_ID, Constants.PARSE_CLIENT_KEY);
         ParseAnalytics.trackAppOpened(getIntent());
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("");
         progressDialog.setCancelable(false);
-        progressDialog.setMessage("Loading...");
+        progressDialog.setMessage("Loading Deals...");
         ActionBar actionBar = getActionBar();
         actionBar.setCustomView(R.layout.action_bar);
         actionBar.setDisplayShowHomeEnabled(false);
@@ -86,6 +91,8 @@ public class DealRadar extends Activity
         myriadProRegular = Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Regular.otf");
         myriadProSemiBold = Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf");
         TextView txtTitle = (TextView) findViewById(R.id.action_bar_title);
+        noEvents = (TextView) findViewById(R.id.no_deals);
+        noEvents.setTypeface(myriadProSemiBold);
         txtTitle.setTypeface(myriadProSemiBold);
 
         dealList = (ListView) findViewById(R.id.deal_list_view);
@@ -101,14 +108,10 @@ public class DealRadar extends Activity
         drawerButton = (ImageButton) findViewById(R.id.toggle_button);
         drawerButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                if(drawerLayout.isDrawerOpen(drawerList))
-                {
+            public void onClick(View view) {
+                if (drawerLayout.isDrawerOpen(drawerList)) {
                     drawerLayout.closeDrawer(drawerList);
-                }
-                else
-                {
+                } else {
                     drawerLayout.openDrawer(drawerList);
                 }
             }
@@ -164,6 +167,7 @@ public class DealRadar extends Activity
             public void onClick(View view)
             {
                 Intent intent = new Intent(context, Settings.class);
+                intent.putExtra("HANDLER", new Messenger(handler));
                 if(intent != null)
                 {
                     startActivity(intent);
@@ -181,6 +185,7 @@ public class DealRadar extends Activity
 
         if(firstLoad)
         {
+            progressDialog.show();
             findMatches();
         }
         else
@@ -211,7 +216,7 @@ public class DealRadar extends Activity
     public void findMatches()
     {
         Log.d("fatal", "Refreshing Parse...");
-        progressDialog.show();
+
         advertisements = new ArrayList<Advertisement>();
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Routers");
         query.findInBackground(new FindCallback<ParseObject>() {
@@ -236,7 +241,10 @@ public class DealRadar extends Activity
 
                         advertisements.add(tmp);
                     }
-                    progressDialog.dismiss();
+                    if(progressDialog.isShowing())
+                    {
+                        progressDialog.dismiss();
+                    }
                     scanThread = new wifiscan();
                     scanThread.start();
                 } else {
@@ -271,24 +279,38 @@ public class DealRadar extends Activity
 
     public void selectItem(int position)
     {
-        switch(position)
+        if(receiverWifi != null)
         {
-            case 0: //All
-                break;
-            case 1: //Food
-                break;
-            case 2: //Clothing
-                break;
-            case 3: //Games
-                break;
-            case 4: //Movies
-                break;
-            case 5: //Pets
-                break;
-            case 6: //Tech
-                break;
-            case 7: //Toys
-                break;
+            String filter = "All";
+            switch(position)
+            {
+                case 0: //All
+                    break;
+                case 1: //Food
+                    filter = "Food";
+                    break;
+                case 2: //Clothing
+                    filter = "Clothing";
+                    break;
+                case 3: //Games
+                    filter = "Games";
+                    break;
+                case 4: //Movies
+                    filter = "Movies";
+                    break;
+                case 5: //Pets
+                    filter = "Pets";
+                    break;
+                case 6: //Tech
+                    filter = "Tech";
+                    break;
+                case 7: //Toys
+                    filter = "Toys";
+                    break;
+            }
+
+            drawerLayout.closeDrawer(drawerList);
+            receiverWifi.setCurrentFilter(filter);
         }
     }
 
@@ -297,6 +319,14 @@ public class DealRadar extends Activity
         public void onItemClick(AdapterView parent, View view, int position, long id)
         {
             selectItem(position);
+        }
+    }
+
+    private class ParseHandler extends Handler
+    {
+        public void handleMessage(Message msg)
+        {
+            findMatches();
         }
     }
 
