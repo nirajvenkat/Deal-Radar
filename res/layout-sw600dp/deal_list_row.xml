@@ -73,7 +73,6 @@
         android:layout_toLeftOf="@+id/deal_list_category_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:src="@drawable/rating_one"/>
+        android:layout_centerVertical="true"/>
 
 </RelativeLayout>

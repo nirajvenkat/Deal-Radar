@@ -118,8 +118,8 @@ public class FullScreenImageView extends FragmentActivity
                                             for (ParseObject parse : result)
                                             {
                                                 int numRatings = parse.getInt("Num_Ratings");
-                                                int newRating = Math.round((numRatings + np.getValue()) / ++numRatings);
-                                                ad.rating = newRating;
+                                                int newRating = parse.getInt("Rating") + np.getValue();
+                                                ad.rating = Math.round(newRating / numRatings);
                                                 parse.put("Rating", newRating);
                                                 parse.increment("Num_Ratings");
                                                 parse.saveInBackground();
