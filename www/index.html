@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" class="fuelux">
+  <head>
+    <meta charset="utf-8">
+    <title>Deal Radar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Deal Radar">
+
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+    
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    
+  </head>
+  <body>    
+    <div id="header" class="navbar navbar-inverse navbar-fixed-top"></div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        
+        <div class="span6 offset3">
+          <div class="hero-unit" style="background-color:#ffffff; opacity:0.9">
+            <br><br>
+            <center>
+                <h1>Deal Radar</h1>
+              <br>
+              <hr>
+              <img src="./img/radar.png">
+              <hr>
+              <p class="lead">Deal Radar's mission is to provide consumers with location targeted deals and promotions to enhance the shopping experience.
+              </p> 
+              <hr>
+              </center>
+                  <form>
+                  Upload an promotional image:
+                  <input type="file" id="photoFileUpload">
+                  <br><br>
+                                    
+    Choose a promotion category:              
+                  <div class="dropdown btn-group">
+    <a class="btn btn-large dropdown-toggle" data-toggle="dropdown" id="categoryDropdown">
+        Category
+        <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+        <li><a onclick='setCategory("Movies")'>Movies</a></li>
+        <li><a onclick='setCategory("Food")'>Food</a></li>
+        <li><a onclick='setCategory("Clothing")'>Clothing</a></li>
+        <li><a onclick='setCategory("Tech")'>Tech</a></li>
+        <li><a onclick='setCategory("Toys")'>Toys</a></li>
+        <li><a onclick='setCategory("Pets")'>Pets</a></li>
+        <li><a onclick='setCategory("Games")'>Games</a></li>
+    </ul>
+</div>
+
+<br><br>
+
+          <center>
+                  <input type="text" placeholder="BSSID/MAC Address" id="bssid"> <i class="icon-white"></i>
+                  <input type="text" placeholder="Company" id="company">
+                  <input type="text" placeholder="Promotion Title" id="dealTitle">
+                  
+                  <div id='submitAlert'></div>
+                  
+                  <script type="text/javascript" src="https://www.ribbon.co/ribbon-modal.js"></script><a target="_self" href="http://rbn.co/1a1e7a">Purchase Promotion Push</a>
+                  
+                  <a class="btn btn-primary btn-large" onclick='submitForm(document.getElementById("bssid").value, "category", document.getElementById("company").value, document.getElementById("dealTitle").value)'>Submit</a>
+                                    
+                                    
+                </form>
+              </a>
+            </center>
+          </div>
+          <div>
+            <!-- Enter any other information, if necessary. -->
+          </div><!--/row-->
+        </div><!--/span-->
+      
+      </div><!--/row-->
+
+  <![if !IE]>
+      <footer>
+      </footer>
+  <![endif]>
+
+    </div><!--/.fluid-container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js" type="text/javascript"></script>
+    <script src="./parse.js"></script>
+    <script src="./js/header.js"></script>
+    <script src="./js/functionality.js"></script>
+    <script src="./js/loader.min.js"></script>
+    <script src="http://www.parsecdn.com/js/parse-1.2.12.min.js"></script>
+  </body>
+</html>
